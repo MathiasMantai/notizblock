@@ -9,11 +9,11 @@ const TextArea = () => {
     
     const onChangeText = (value: string) => {
         setInput(value);
-        setData(value);
+        setData(value,"notizblock");
     }
 
     useEffect( () => {
-        getData(setInput);
+        getData(setInput, "notizblock");
     }, []);
     return (
         <TextInput 
@@ -22,6 +22,7 @@ const TextArea = () => {
             numberOfLines={10} 
             spellCheck={false} 
             style={styles.textarea}
+            autoCorrect={false}
             onChangeText={onChangeText}
         >
         </TextInput>
@@ -34,7 +35,8 @@ const styles = StyleSheet.create({
         textAlignVertical: "top",
         backgroundColor: "#e8eaf6",
         color: "#000",
-        fontSize: 18
+        fontSize: 18,
+        
     }
 })
 

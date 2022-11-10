@@ -1,20 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-let STORAGE_KEY = '@user_input';
 
-const setData = async (input: string) => {
+
+const setData = async (input: string, key: string) => {
     try {
-        await AsyncStorage.setItem(STORAGE_KEY, input);
+        await AsyncStorage.setItem(key, input);
     }
     catch(e: any) {
         Alert.alert(e);
     }
 };
 
-const getData = async (setInput: CallableFunction) => {
+const getData = async (setInput: CallableFunction, key: string) => {
     try {
-        const value = await AsyncStorage.getItem(STORAGE_KEY);
+        const value = await AsyncStorage.getItem(key);
 
         if(value !== null) {
             setInput(value);
@@ -25,6 +25,16 @@ const getData = async (setInput: CallableFunction) => {
     }
 };
 
+const getCurrentNote = async () => {
+    return await AsyncStorage.getItem('currentNote');
+}
 
+const clearAsyncStorage = async () => {
+    await AsyncStorage.clear();
+}
 
-export { setData, getData };
+const getAllNoteKeys = async () => {
+    return await AsyncStorage.getAllKeys();
+}
+
+export { setData, getData, getCurrentNote, getAllNoteKeys, clearAsyncStorage };
