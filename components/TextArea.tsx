@@ -1,23 +1,42 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, TextInput } from "react-native"
+import { StyleSheet, TextInput, Alert } from "react-native"
 
-import { setData, getData } from "../storage/Storage";
+import { setData, getData, getCurrentNote } from "../storage/Storage";
 
-const TextArea = () => {
+const TextArea = (props: TextAreaProps) => {
+    const [content, setContent] = useState("");
+    const [currentNote, setCurrentNote] = useState("");
 
-    const [input, setInput] = useState('');
-    
-    const onChangeText = (value: string) => {
-        setInput(value);
-        setData(value,"notizblock");
+
+    const onChangeText = async (value: string) => {
+        setContent(value);
+        setData(value, currentNote);
     }
 
-    useEffect( () => {
-        getData(setInput, "notizblock");
-    }, []);
+    useEffect(() => {
+        if(!props.loadedContent) {
+            let noteTmp = getCurrentNote();
+            noteTmp.then((value) => {
+                if(value != null) {
+                    setCurrentNote(value);
+                    let currentContent = getData(setContent, value);
+                    currentContent.then((value) => {
+                        if(value != null) {
+                            setContent(value);
+                        }
+                    });
+                }
+                else {
+                    setCurrentNote("Notizblock");
+                }
+            });
+            props.setLoadedContent(true);
+        }
+    }, [props.loadedContent]);
+
     return (
         <TextInput 
-            value={input}
+            value={content}
             multiline={true} 
             numberOfLines={10} 
             spellCheck={false} 
@@ -36,8 +55,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#e8eaf6",
         color: "#000",
         fontSize: 18,
-        
+        padding: 10
     }
 })
+
+type TextAreaProps = {
+    loadedContent: boolean,
+    setLoadedContent: CallableFunction
+}
 
 export default TextArea

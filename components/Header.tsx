@@ -1,11 +1,32 @@
-import { View, Text, StyleSheet, StatusBar, Image, TouchableHighlight } from "react-native";
+import { Alert, View, Text, StyleSheet, Image, TouchableHighlight } from "react-native";
+import { useEffect, useState } from "react";
+import { getCurrentNote, setCurrentNote } from "../storage/Storage";
 
 const Header = (props: HeaderTypes) => {
+
+    const [title, setTitle] = useState("");
+
+    useEffect( () => {
+        let tmp = getCurrentNote();
+        tmp.then( (value) => {
+            if(value != null) {
+                setTitle(value);
+            }
+            else {
+                setTitle("Notizblock");
+                setCurrentNote("Notizblock");
+            }
+        });
+    }, []);
+
     return (
         <View style={styles.header}>
             <Text style={styles.headertext}>
-                {props.title}
+                {title}
             </Text>
+            <TouchableHighlight onPress={() => props.setDialogVisible(true)}>
+                <Image source={require('../assets/plus.png')} style={{width: 40, height: 40}} />
+            </TouchableHighlight>            
             <TouchableHighlight onPress={() => props.setMenuActive(!props.menuActive)}>
                 <Image source={require('../assets/burger.png')} style={{width: 40, height: 40}} />
             </TouchableHighlight>
@@ -14,9 +35,9 @@ const Header = (props: HeaderTypes) => {
 };
 
 type HeaderTypes = {
-    title: string,
     menuActive: boolean,
-    setMenuActive: CallableFunction
+    setMenuActive: CallableFunction,
+    setDialogVisible: CallableFunction
 };
 
 const styles = StyleSheet.create({

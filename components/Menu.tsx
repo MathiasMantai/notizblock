@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View, ScrollView } from "react-native";
 
 import { getAllNoteKeys, clearAsyncStorage } from "../storage/Storage";
 
@@ -9,7 +9,7 @@ const Menu = (props: MenuProps) => {
 
     useEffect( () => {
         let tmp = getAllNoteKeys();
-        Alert.alert(JSON.stringify(tmp));
+        // Alert.alert(JSON.stringify(tmp));
         tmp.then( (value) => {
             if(value.length == 0) {
                 setKeys(["Notizblock"]);
@@ -25,7 +25,7 @@ const Menu = (props: MenuProps) => {
         return (
             <View style={[styles.menu_default, styles.menu_active]}>
                 {Object.entries(keys).map( (keys) => (
-                    <Text style={styles.menu_entries}>{keys[1]}</Text>
+                    keys[1] == "currentNote" ? "" : <Text key={keys[0]} style={styles.menu_entries}>{keys[1]}</Text>
                 ))}
             </View>
         )
